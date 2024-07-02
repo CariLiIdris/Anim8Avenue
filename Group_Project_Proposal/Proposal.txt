@@ -1,14 +1,14 @@
 Which group members are responsible for what?
-Since our group wanted to all do styling and CSS We decided to have each lead a department and assist with css.
-Zacarias: Project Management / Front End Components / Github / CSS (Possibly doing python backend)
-Jeremiah: Python Backend / CSS (if he does deside not to do backend I will have him aid me in getting my foot back in)
-Nehimya: JS Frontend / Services / CSS
+
+Zacarias: Project Management / Py Backend / Validations / Front End Components / CSS
+Jeremiah: Github managemeny / Route Protection / CSS / Backend support
+Nehimya: JS Frontend / Services/ Validations / CSS
 
 Description of project:
 An anime social website to discuss anime, sort your own anime watch list, get anime news and updates, and communicate with other users in public chats and private messaging.
 
 Github link for project: 
-(Still waiting to get some answers so we know who will be managing github)
+https://github.com/CariLiIdris/Anim8Avenue
 
 Will you have a gitignore? 
 Absolutely!
