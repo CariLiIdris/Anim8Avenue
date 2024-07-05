@@ -5,6 +5,17 @@ from config import app
 
 CORS(app)
 
+# C
+@app.route('/api/users', methods=['POST'])
+def createUser():
+  data = request.get_json()
+  if User.validateNewUser(data):
+    userID = User.createUser(data)
+    return jsonify({'message': 'User created', 'userID': userID}), 200
+  else:
+    return jsonify({'errorMsg': 'Validation failed'}), 400
+
+# R
 @app.route('/api/users', methods=['GET'])
 def getAllUsers():
   users = User.getAllUsers()
@@ -17,16 +28,24 @@ def getUserByID(userID):
     return jsonify(user.__dict__)
   else:
     return jsonify({'errorMsg': 'User not found'}), 404
-  
-@app.route('/api/users', methods=['POST'])
-def createUser():
-  data = request.get_json()
-  if User.validateNewUser(data):
-    userID = User.createUser(data)
-    return jsonify({'message': 'User created', 'userID': userID}), 200
-  else:
-    return jsonify({'errorMsg': 'Validation failed'}), 400
-  
+
+# U
+@app.route('/api/user/<int:userID>', methods=['PUT'])
+def updateUserByID(userID):
+    data = request.get_json()
+    if User.validateUserData(data):
+        User.updateUserByID(userID, data)
+        return jsonify({'message': 'User updated'}), 200
+    else:
+        return jsonify({'errorMsg': 'Validation failed'}), 400
+
+# D
+@app.route('/api/user/<int:userID>', methods=['DELETE'])
+def deleteUserByID(userID):
+    User.deleteUserByID(userID)
+    return jsonify({'message': 'User deleted'}), 200
+
+# Login and logout
 @app.route('/api/user/login', methods=['POST'])
 def login():
     data = request.get_json()
