@@ -8,7 +8,7 @@ EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
 
 # User class
 class User:
-  DB = 'anim8AveSchema'
+  from config import DB
   def __init__(self, data):
     self._id = data['_id']
     self.username = data['username']
@@ -33,7 +33,7 @@ class User:
             'email': self.email,
             'created_at': self.created_at,
             'updated_at': self.updated_at,
-            'friends': self.friends,
+            'friends': [friend.to_dict() for friend in self.friends],
             'messages': self.messages,
             'groups': self.groups,
             'shows': self.shows
@@ -64,10 +64,7 @@ class User:
               SELECT * FROM users;
             '''
     results = connectToMySQL(cls.DB).query_db(query)
-    users = []
-
-    for user in results:
-      users.append( cls(user) )
+    users = [cls(user) for user in results]
     return users
   
   # Get user by ID
@@ -80,7 +77,9 @@ class User:
     data = { '_id': userID }
     result = connectToMySQL(cls.DB).query_db(query, data)
     if result:
-      return cls(result[0])
+      user = cls(result[0])
+      user.friends = cls.getUserFriends(user._id)
+      return user
     return None
     
   # Get user by username
@@ -128,6 +127,35 @@ class User:
               WHERE _id = %(_id)s;
             '''
     data = {'_id': userID}
+    return connectToMySQL(cls.DB).query_db(query, data)
+  
+  @classmethod
+  def getUserFriends(cls, userID):
+    query = '''
+            SELECT users.* FROM users
+            JOIN friends ON users._id = friends.friend_id
+            WHERE friends.user_id = %(_id)s;
+            '''
+    data = {'_id': userID}
+    results = connectToMySQL(cls.DB).query_db(query, data)
+    return [cls(friend) for friend in results]
+
+  @classmethod
+  def addFriend(cls, user_id, friend_id):
+    query = '''
+            INSERT INTO friends (user_id, friend_id)
+            VALUES (%(user_id)s, %(friend_id)s);
+            '''
+    data = {'user_id': user_id, 'friend_id': friend_id}
+    return connectToMySQL(cls.DB).query_db(query, data)
+
+  @classmethod
+  def removeFriend(cls, user_id, friend_id):
+    query = '''
+            DELETE FROM friends
+            WHERE user_id = %(user_id)s AND friend_id = %(friend_id)s;
+            '''
+    data = {'user_id': user_id, 'friend_id': friend_id}
     return connectToMySQL(cls.DB).query_db(query, data)
   
   # User validations
