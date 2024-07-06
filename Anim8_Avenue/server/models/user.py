@@ -39,6 +39,7 @@ class User:
             'shows': self.shows
         }
 
+# C
   @classmethod
   def createUser(cls, data):
     # create a new user
@@ -55,7 +56,20 @@ class User:
                   );
             '''
     return connectToMySQL(cls.DB).query_db(query, data)
-    
+
+# R
+  @classmethod
+  def getAllUsers(cls):
+    query = '''
+              SELECT * FROM users;
+            '''
+    results = connectToMySQL(cls.DB).query_db(query)
+    users = []
+
+    for user in results:
+      users.append( cls(user) )
+    return users
+  
   # Get user by ID
   @classmethod
   def getUserByID(cls, userID):
@@ -82,22 +96,52 @@ class User:
       return cls(result[0])
     return False
   
+  # Get user by username
   @classmethod
-  def getAllUsers(cls):
+  def getUserByEmail(cls, email):
     query = '''
-              SELECT * FROM users;
+              SELECT * from users
+              WHERE users.email = %(email)s;
             '''
-    results = connectToMySQL(cls.DB).query_db(query)
-    users = []
-
-    for user in results:
-      users.append( cls(user) )
-    return users
+    data = { 'email': email }
+    result = connectToMySQL(cls.DB).query_db(query, data)
+    if result:
+      return cls(result[0])
+    return False
+  
+  # U
+  @classmethod
+  def updateUserByID(cls, userID, data):
+    query = '''
+              UPDATE users
+              SET username=%(username)s, fName=%(fName)s, lName=%(lName)s, email=%(email)s
+              WHERE _id = %(_id)s;
+            '''
+    data['_id'] = userID
+    return connectToMySQL(cls.DB).query_db(query, data)
+  
+  # D
+  @classmethod
+  def deleteUserByID(cls, userID):
+    query = '''
+              DELETE FROM users 
+              WHERE _id = %(_id)s;
+            '''
+    data = {'_id': userID}
+    return connectToMySQL(cls.DB).query_db(query, data)
   
   # User validations
   @staticmethod
   def validateNewUser(userData):
     isValid = True
+
+    if User.getUserByUsername(userData['username']):
+        flash('Username already taken', 'register')
+        isValid = False
+
+    if User.getUserByEmail(userData['email']):
+        flash('Email already registered', 'register')
+        isValid = False
 
     if len(userData['username']) < 2:
       flash('Username must be greater than 2 characters', 'register')
@@ -121,6 +165,36 @@ class User:
     elif len(userData['password']) < 7:
       flash('Password must be at least 7 characters', 'register')
       isValid = False
+    return isValid
+  
+  @staticmethod
+  def validateUserData(userData):
+    isValid = True
+
+    if User.getUserByUsername(userData['username']):
+        flash('Username already taken', 'register')
+        isValid = False
+
+    if User.getUserByEmail(userData['email']):
+        flash('Email already registered', 'register')
+        isValid = False
+
+    if len(userData['username']) < 2:
+      flash('Username must be greater than 2 characters', 'register')
+      isValid = False
+    
+    if len(userData['fName']) < 2:
+      flash('First Name must be at least 2 characters.', 'register')
+      isValid = False
+
+    if len(userData['lName']) < 2:
+      flash('Last name must be at least than 2 characters.', 'register')
+      isValid = False
+
+    if not EMAIL_REGEX.match(userData['email']):
+      flash('Invalid email format', 'register')
+      isValid = False
+
     return isValid
   
   @staticmethod

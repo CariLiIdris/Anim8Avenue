@@ -5,19 +5,7 @@ from config import app
 
 CORS(app)
 
-@app.route('/api/users', methods=['GET'])
-def getAllUsers():
-  users = User.getAllUsers()
-  return jsonify([user.__dict__ for user in users]) # Convert User objects to dictionaries
-
-@app.route('/api/users/<int:userID>', methods=['GET'])
-def getUserByID(userID):
-  user = User.getUserByID(userID)
-  if user:
-    return jsonify(user.__dict__)
-  else:
-    return jsonify({'errorMsg': 'User not found'}), 404
-  
+# C
 @app.route('/api/users', methods=['POST'])
 def createUser():
   data = request.get_json()
@@ -26,7 +14,47 @@ def createUser():
     return jsonify({'message': 'User created', 'userID': userID}), 200
   else:
     return jsonify({'errorMsg': 'Validation failed'}), 400
+
+# R
+@app.route('/api/users', methods=['GET'])
+def getAllUsers():
+  users = User.getAllUsers()
+  # Convert User objects to dictionaries
+  return jsonify([user.__dict__ for user in users]), 200 
+
+@app.route('/api/users/<int:userID>', methods=['GET'])
+def getUserByID(userID):
+  user = User.getUserByID(userID)
+  if user:
+    return jsonify(user.__dict__), 200
+  else:
+    return jsonify({'errorMsg': 'User not found'}), 404
   
+@app.route('/api/users/<string:username>', methods=['GET'])
+def getUserByUsername(username):
+  user = User.getUserByUsername(username)
+  if user:
+    return jsonify(user.__dict__), 200
+  else:
+    return jsonify({'errorMsg': 'User not found'}), 404
+
+# U
+@app.route('/api/user/<int:userID>', methods=['PUT'])
+def updateUserByID(userID):
+    data = request.get_json()
+    if User.validateUserData(data):
+        User.updateUserByID(userID, data)
+        return jsonify({'message': 'User updated'}), 200
+    else:
+        return jsonify({'errorMsg': 'Validation failed'}), 400
+
+# D
+@app.route('/api/user/<int:userID>', methods=['DELETE'])
+def deleteUserByID(userID):
+    User.deleteUserByID(userID)
+    return jsonify({'message': 'User deleted'}), 200
+
+# Login and logout
 @app.route('/api/user/login', methods=['POST'])
 def login():
     data = request.get_json()
