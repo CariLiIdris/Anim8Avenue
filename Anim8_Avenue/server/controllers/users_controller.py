@@ -20,13 +20,13 @@ def createUser():
 def getAllUsers():
   users = User.getAllUsers()
   # Convert User objects to dictionaries
-  return jsonify([user.__dict__ for user in users]), 200 
+  return jsonify([user.to_dict() for user in users]), 200 
 
 @app.route('/api/users/<int:userID>', methods=['GET'])
 def getUserByID(userID):
   user = User.getUserByID(userID)
   if user:
-    return jsonify(user.__dict__), 200
+    return jsonify(user.to_dict()), 200
   else:
     return jsonify({'errorMsg': 'User not found'}), 404
   
@@ -34,7 +34,7 @@ def getUserByID(userID):
 def getUserByUsername(username):
   user = User.getUserByUsername(username)
   if user:
-    return jsonify(user.__dict__), 200
+    return jsonify(user.to_dict()), 200
   else:
     return jsonify({'errorMsg': 'User not found'}), 404
 
@@ -64,8 +64,9 @@ def login():
         return jsonify({'message': 'Login successful', 'user': user.to_dict()}), 200
     else:
         return jsonify({'error': 'Invalid credentials'}), 401
-    
+
 @app.route('/api/user/logout', methods=['POST'])
 def logout():
     session.pop('userID', None)
+    session.clear()
     return jsonify({'message': 'Logout successful'}), 200
