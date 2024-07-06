@@ -1,15 +1,15 @@
 from config.mysqlconnection import connectToMySQL
 from flask import flash # type: ignore
 
-class Show:
+class Group:
   from config import DB
   def __init__(self, data):
     self._id = data['_id']
     self.name = data['name']
     self.description = data['description']
-    self.created_at = data["created_at"]
-    self.updated_at = data["updated_at"]
-    
+    self.created_at = data['created_at']
+    self.updated_at = data['updated_at']
+
     self.owner_id = data['owner_id']
 
   def to_dict(self):
@@ -24,9 +24,9 @@ class Show:
 
 # C
   @classmethod
-  def createShow(cls, data):
+  def createGroup(cls, data):
     query = '''
-              INSERT INTO shows (name, description, owner_id)
+              INSERT INTO `groups` (name, description, owner_id)
               VALUES (
                     %(name)s,
                     %(description)s,
@@ -36,27 +36,27 @@ class Show:
     return connectToMySQL(cls.DB).query_db(query, data)
 
 # R
-# Get all shows
+# Get all groups
   @classmethod
-  def getAllShows(cls):
+  def getAllGroups(cls):
     query = '''
-              SELECT * FROM shows;
+              SELECT * FROM `groups`;
             '''
     results = connectToMySQL(cls.DB).query_db(query)
-    shows = []
+    groups = []
 
-    for show in results:
-      shows.append( cls(show) )
-    return shows
+    for group in results:
+      groups.append( cls(group) )
+    return groups
   
 # Get show by ID
   @classmethod
-  def getShowByID(cls, showID):
+  def getGroupByID(cls, groupID):
     query = '''
-              SELECT * FROM shows
+              SELECT * FROM `groups`
               WHERE _id = %(_id)s;
             '''
-    data = { '_id': showID }
+    data = { '_id': groupID }
     result = connectToMySQL(cls.DB).query_db(query, data)
     if result:
       return cls(result[0])
@@ -64,21 +64,21 @@ class Show:
 
 # U
   @classmethod
-  def updateShowByID(cls, showID, data):
+  def updateGroupByID(cls, groupID, data):
     query = '''
-              UPDATE shows
+              UPDATE `groups`
               SET name=%(name)s, description=%(description)s
               WHERE _id = %(_id)s;
             '''
-    data['_id'] = showID
+    data['_id'] = groupID
     return connectToMySQL(cls.DB).query_db(query, data)
 
 # D
   @classmethod
-  def deleteShowByID(cls, showID):
+  def deleteGroupByID(cls, groupID):
     query = '''
-              DELETE FROM shows 
+              DELETE FROM `groups` 
               WHERE _id = %(_id)s;
             '''
-    data = {'_id': showID}
+    data = {'_id': groupID}
     return connectToMySQL(cls.DB).query_db(query, data)

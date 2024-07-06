@@ -1,7 +1,7 @@
 from config.mysqlconnection import connectToMySQL
 from flask import flash # type: ignore
 
-class ShowPost: 
+class GroupPost:
   from config import DB
   def __init__(self, data):
     self._id = data['_id']
@@ -10,7 +10,7 @@ class ShowPost:
     self.updated_at = data['updated_at']
 
     self.author_id = data['author_id']
-    self.show_id = data['show_id']
+    self.group_id = data['group_id']
 
   def to_dict(self):
     return {
@@ -19,27 +19,41 @@ class ShowPost:
       'created_at': self.created_at,
       'updated_at': self.updated_at,
       'author_id': self.author_id,
-      'show_id': self.show_id
+      'group_id': self.group_id
     }
 
 # C
   @classmethod
-  def createShowPost(cls, data):
+  def createGroupPost(cls, data):
     query = '''
-              INSERT INTO showPosts (content, author_id, show_id)
+              INSERT INTO groupPosts (content, group_id, author_id)
               VALUES (
-                %(content)s,
-                %(author_id)s,
-                %(show_id)s
-              );
+                    %(content)s,
+                    %(group_id)s,
+                    %(author_id)s
+                    );
             '''
     return connectToMySQL(cls.DB).query_db(query, data)
 
 # R
+# Get all group posts
   @classmethod
-  def getShowPostByID(cls, postID):
+  def getAllGroupPosts(cls):
     query = '''
-              SELECT * FROM showPosts
+              SELECT * FROM groupPosts;
+            '''
+    results = connectToMySQL(cls.DB).query_db(query)
+    groupPosts = []
+
+    for groupPost in results:
+      groupPosts.append( cls(groupPost) )
+    return groupPosts
+  
+# Get group post by ID
+  @classmethod
+  def getGroupPostByID(cls, postID):
+    query = '''
+              SELECT * FROM groupPosts
               WHERE _id = %(_id)s;
             '''
     data = { '_id': postID }
@@ -48,23 +62,11 @@ class ShowPost:
       return cls(result[0])
     return None
 
-  @classmethod
-  def getAllShowPosts(cls):
-    query = '''
-              SELECT * FROM showPosts
-            '''
-    results = connectToMySQL(cls.DB).query_db(query)
-    showPosts = []
-
-    for showPost in results:
-      showPosts.append( cls(showPost) )
-    return showPosts
-
 # U
   @classmethod
-  def updateShowPostByID(cls, postID, data):
+  def updateGroupPostByID(cls, postID, data):
     query = '''
-              UPDATE showPosts
+              UPDATE groupPosts
               SET content=%(content)s
               WHERE _id = %(_id)s;
             '''
@@ -73,10 +75,10 @@ class ShowPost:
 
 # D
   @classmethod
-  def deleteShowPostByID(cls, postID):
+  def deleteGroupPostByID(cls, postID):
     query = '''
-              DELETE FROM showPosts
-              WHERE _id = %(_id)s
+              DELETE FROM groupPosts 
+              WHERE _id = %(_id)s;
             '''
-    data = { '_id': postID }
+    data = {'_id': postID}
     return connectToMySQL(cls.DB).query_db(query, data)

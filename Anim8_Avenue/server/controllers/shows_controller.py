@@ -9,6 +9,7 @@ CORS(app)
 @app.route('/api/shows', methods=['POST'])
 def createShow():
   data = request.get_json()
+  data['owner_id'] = session['userID']
   showID = Show.createShow(data)
   return jsonify({'message': 'Show created', 'showID': showID}), 200
 
@@ -16,13 +17,13 @@ def createShow():
 @app.route('/api/shows', methods=['GET'])
 def getAllShows():
   shows = Show.getAllShows()
-  return jsonify([show.__dict__ for show in shows])
+  return jsonify([show.to_dict() for show in shows])
 
 @app.route('/api/shows/<int:showID>', methods=['GET'])
 def getShowByID(showID):
   show = Show.getShowByID(showID)
   if show:
-    return jsonify(show.__dict__)
+    return jsonify(show.to_dict())
   else:
     return jsonify({'errorMsg': 'Show not found'}), 404
 
