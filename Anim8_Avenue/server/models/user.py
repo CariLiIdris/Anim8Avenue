@@ -56,8 +56,20 @@ class User:
                   );
             '''
     return connectToMySQL(cls.DB).query_db(query, data)
-    
+
 # R
+  @classmethod
+  def getAllUsers(cls):
+    query = '''
+              SELECT * FROM users;
+            '''
+    results = connectToMySQL(cls.DB).query_db(query)
+    users = []
+
+    for user in results:
+      users.append( cls(user) )
+    return users
+  
   # Get user by ID
   @classmethod
   def getUserByID(cls, userID):
@@ -97,18 +109,7 @@ class User:
       return cls(result[0])
     return False
   
-  @classmethod
-  def getAllUsers(cls):
-    query = '''
-              SELECT * FROM users;
-            '''
-    results = connectToMySQL(cls.DB).query_db(query)
-    users = []
-
-    for user in results:
-      users.append( cls(user) )
-    return users
-  
+  # U
   @classmethod
   def updateUserByID(cls, userID, data):
     query = '''
@@ -119,6 +120,7 @@ class User:
     data['_id'] = userID
     return connectToMySQL(cls.DB).query_db(query, data)
   
+  # D
   @classmethod
   def deleteUserByID(cls, userID):
     query = '''

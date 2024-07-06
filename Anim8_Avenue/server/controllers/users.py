@@ -19,13 +19,22 @@ def createUser():
 @app.route('/api/users', methods=['GET'])
 def getAllUsers():
   users = User.getAllUsers()
-  return jsonify([user.__dict__ for user in users]) # Convert User objects to dictionaries
+  # Convert User objects to dictionaries
+  return jsonify([user.__dict__ for user in users]), 200 
 
 @app.route('/api/users/<int:userID>', methods=['GET'])
 def getUserByID(userID):
   user = User.getUserByID(userID)
   if user:
-    return jsonify(user.__dict__)
+    return jsonify(user.__dict__), 200
+  else:
+    return jsonify({'errorMsg': 'User not found'}), 404
+  
+@app.route('/api/users/<string:username>', methods=['GET'])
+def getUserByUsername(username):
+  user = User.getUserByUsername(username)
+  if user:
+    return jsonify(user.__dict__), 200
   else:
     return jsonify({'errorMsg': 'User not found'}), 404
 
