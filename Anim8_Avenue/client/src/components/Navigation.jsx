@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 function Navigation() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // initialize isLoggedIn to false
+
   return (
     <nav>
       <ul>
@@ -12,11 +14,12 @@ function Navigation() {
         <li><Link to="/register">Register</Link></li>
       </ul>
       <div className="dropdown">
-        <button className="dropbtn">Account</button>
-        <div className="dropdown-content">
-          <Link to="/login">Login</Link>
-          <Link to="/register">Register</Link>
-        </div>
+        {isLoggedIn ? (
+          <li><Link to="/profile">Account</Link></li>
+        ) : (
+          <li><Link to="/login">Login</Link></li>
+        )}
+        <Link to="/register">Register</Link>
       </div>
     </nav>
   );
