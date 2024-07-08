@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { Link } from 'react-router-dom';
+import { getAllShows } from '../services/showService';
 
 function ShowList() {
   const [shows, setShows] = useState([]);
 
   useEffect(() => {
-    axios.get('/api/shows')
-      .then(response => {
-        setShows(response.data);
-      })
-      .catch(error => {
+    const fetchShows = async () => {
+      try {
+        const response = await getAllShows();
+        setShows(response);
+      } catch (error) {
         console.error(error);
-      });
+      }
+    };
+    fetchShows();
   }, []);
 
   return (

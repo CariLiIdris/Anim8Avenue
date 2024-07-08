@@ -1,18 +1,22 @@
-import React from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { getShowById } from '../services/showService';
 
-function ShowDetails(props) {
+function ShowDetails() {
+  const { id } = useParams();
   const [show, setShow] = useState({});
 
   useEffect(() => {
-    axios.get(`/api/shows/${props.match.params.id}`)
-      .then(response => {
-        setShow(response.data);
-      })
-      .catch(error => {
+    const fetchShow = async () => {
+      try {
+        const response = await getShowById(id);
+        setShow(response);
+      } catch (error) {
         console.error(error);
-      });
-  }, [props.match.params.id]);
+      }
+    };
+    fetchShow();
+  }, [id]);
 
   return (
     <div>
@@ -22,4 +26,4 @@ function ShowDetails(props) {
   );
 }
 
-export default ShowDetails;
+export default ShowDetails

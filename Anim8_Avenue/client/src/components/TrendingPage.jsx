@@ -4,7 +4,7 @@ function TrendingPage() {
   return (
     <div>
       <h1>Trending Page</h1>
-      <!-- Add trending shows list here -->
+      {/* <!-- Add trending shows list here --> */}
     </div>
   );
 }

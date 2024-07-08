@@ -1,46 +1,64 @@
+// LoginForm.js
 import React, { useState } from 'react';
-import axios from 'axios';
-import { Link, useHistory } from 'react-router-dom';
-import { flash } from '../utils/flash';
 
-function LoginPage() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
-  const history = useHistory();
+function LoginForm() {
+  const [form, setForm] = useState({ email: '', password: '' });
+  const [errors, setErrors] = useState({ email: '', password: '' });
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    axios.post('/api/login', { username, password })
-      .then(response => {
-        if (response.data.success) {
-          flash('You have successfully logged in!', 'success');
-          history.push('/shows');
+  const handleFormChange = (event) => {
+    const { name, value } = event.target;
+    setForm((prevForm) => ({ ...prevForm, [name]: value }));
+
+    validateField(name, value);
+  };
+
+  const validateField = (name, value) => {
+    switch (name) {
+      case 'email':
+        if (!value) {
+          setErrors((prevErrors) => ({ ...prevErrors, email: 'Email is required' }));
+        } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
+          setErrors((prevErrors) => ({ ...prevErrors, email: 'Invalid email address' }));
         } else {
-          setError(response.data.error);
+          setErrors((prevErrors) => ({ ...prevErrors, email: '' }));
         }
-      })
-      .catch(error => {
-        setError('Invalid username or password');
-      });
+        break;
+      case 'password':
+        if (!value) {
+          setErrors((prevErrors) => ({ ...prevErrors, password: 'Password is required' }));
+        } else if (value.length < 8) {
+          setErrors((prevErrors) => ({ ...prevErrors, password: 'Password must be at least 8 characters' }));
+        } else {
+          setErrors((prevErrors) => ({ ...prevErrors, password: '' }));
+        }
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+    if (Object.keys(errors).every((key) => errors[key] === '')) {
+      // Login logic here
+      // You can call an API or perform any other login logic here
+      console.log('Login successful!');
+    }
   };
 
   return (
-    <div>
-      <h1>Login Page</h1>
-      <form onSubmit={handleSubmit}>
-        <label>Username:</label>
-        <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-        <br />
-        <label>Password:</label>
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <br />
-        <button type="submit">Login</button>
-        {error && <div style={{ color: 'red' }}>{error}</div>}
-        <p>Don't have an account? <Link to="/register">Register</Link></p>
-      </form>
-    </div>
+    <form onSubmit={handleFormSubmit}>
+      <label>Email:</label>
+      <input type="email" name="email" value={form.email} onChange={handleFormChange} />
+      {errors.email && <div style={{ color: 'red' }}>{errors.email}</div>}
+      <br />
+      <label>Password:</label>
+      <input type="password" name="password" value={form.password} onChange={handleFormChange} />
+      {errors.password && <div style={{ color: 'red' }}>{errors.password}</div>}
+      <br />
+      <button type="submit">Login</button>
+    </form>
   );
 }
 
-export default LoginPage;
+export default LoginForm;
