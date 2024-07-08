@@ -20,9 +20,9 @@ class User:
     self.updated_at = data["updated_at"]
 
     self.friends = []
-    self.messages = []
     self.groups = []
     self.shows = []
+    # self.messages = []
 
   def to_dict(self):
         return {
@@ -34,9 +34,9 @@ class User:
             'created_at': self.created_at,
             'updated_at': self.updated_at,
             'friends': [friend.to_dict() for friend in self.friends],
-            'messages': self.messages,
-            'groups': self.groups,
-            'shows': self.shows
+            'groups': [group.to_dict() for group in self.groups],
+            'shows': [show.to_dict() for show in self.shows],
+            # 'messages': self.messages
         }
 
 # C
@@ -79,6 +79,8 @@ class User:
     if result:
       user = cls(result[0])
       user.friends = cls.getUserFriends(user._id)
+      user.groups = cls.getUserGroups(user._id)
+      user.shows = cls.getUserShows(user._id)
       return user
     return None
     
@@ -107,6 +109,44 @@ class User:
     if result:
       return cls(result[0])
     return False
+
+  @classmethod
+  def getUserGroups(cls, userID):
+    from models.group import Group
+    query = '''
+            SELECT `groups`.* FROM `groups`
+            LEFT JOIN users ON `groups`.owner_id = users._id
+            WHERE users._id = %(_id)s;
+            '''
+    data = {'_id': userID}
+    try:
+        results = connectToMySQL(cls.DB).query_db(query, data)
+        if results:
+            return [Group(group) for group in results]
+        else:
+            return []
+    except Exception as e:
+        print(f"Error executing query: {e}")
+        return []
+
+  @classmethod
+  def getUserShows(cls, userID):
+    from models.show import Show
+    query = '''
+            SELECT shows.* FROM shows
+            LEFT JOIN users ON shows.owner_id = users._id
+            WHERE users._id = %(_id)s;
+            '''
+    data = {'_id': userID}
+    try:
+        results = connectToMySQL(cls.DB).query_db(query, data)
+        if results:
+            return [Show(show) for show in results]
+        else:
+            return []
+    except Exception as e:
+        print(f"Error executing query: {e}")
+        return []
   
   # U
   @classmethod
@@ -133,21 +173,44 @@ class User:
   def getUserFriends(cls, userID):
     query = '''
             SELECT users.* FROM users
-            JOIN friends ON users._id = friends.friend_id
-            WHERE friends.user_id = %(_id)s;
+            LEFT JOIN friends ON users._id = friends.friend_id OR users._id = friends.user_id
+            WHERE (friends.user_id = %(_id)s OR friends.friend_id = %(_id)s)
+            AND users._id != %(_id)s;
             '''
     data = {'_id': userID}
-    results = connectToMySQL(cls.DB).query_db(query, data)
-    return [cls(friend) for friend in results]
+    try:
+        results = connectToMySQL(cls.DB).query_db(query, data)
+        if results:
+            return [cls(friend) for friend in results]
+        else:
+            return []
+    except Exception as e:
+        print(f"Error executing query: {e}")
+        return []
 
   @classmethod
   def addFriend(cls, user_id, friend_id):
     query = '''
             INSERT INTO friends (user_id, friend_id)
-            VALUES (%(user_id)s, %(friend_id)s);
+            VALUES (
+              %(user_id)s, 
+              %(friend_id)s
+            );
             '''
     data = {'user_id': user_id, 'friend_id': friend_id}
     return connectToMySQL(cls.DB).query_db(query, data)
+
+  @classmethod
+  def getUserIDByUsername(cls, username):
+    query = '''
+            SELECT _id FROM users
+            WHERE username = %(username)s;
+            '''
+    data = {'username': username}
+    result = connectToMySQL(cls.DB).query_db(query, data)
+    if result:
+        return result[0]['_id']
+    return None
 
   @classmethod
   def removeFriend(cls, user_id, friend_id):
