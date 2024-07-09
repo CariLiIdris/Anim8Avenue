@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+/* eslint-disable no-unused-vars */
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createUser } from '../services/userService.jsx';
+import { userContext } from '../context/userContext.jsx';
 
 function RegisterPage() {
   const navigate = useNavigate();
+  const { setUser, storeIdInLocalStorage } = useContext(userContext)
 
-  const [form, setForm] = useState({
+  const [userData, setUserData] = useState({
     username: '',
     fName: '',
     lName: '',
@@ -25,8 +28,8 @@ function RegisterPage() {
 
   const [registered, setRegistered] = useState(false);
 
-  const handleFormChange = (event) => {
-    const { name, value } = event.target;
+  const handleFormChange = e => {
+    const { name, value } = e.target;
 
     // Validate the field as you type
     let error = '';
@@ -47,35 +50,29 @@ function RegisterPage() {
         error = 'Password must be at least 8 characters';
       }
     } else if (name === 'confirmPassword') {
-      if (value!== form.password) {
+      if (value !== userData.password) {
         error = 'Passwords do not match';
       }
     }
 
-    setErrors((prevErrors) => ({...prevErrors, [name]: error }));
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
 
-    setForm((prevForm) => ({...prevForm, [name]: value }));
+    setUserData((prevForm) => ({ ...prevForm, [name]: value }));
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async e => {
+    e.preventDefault();
 
-    const { username, fName, lName, email, password, confirmPassword } = form;
-
-    const newUser = {
-      username,
-      fName,
-      lName,
-      email,
-      password,
-    };
-
-    try {
-      const response = await createUser(newUser);
-      setRegistered(true);
-    } catch (error) {
-      setErrors(error.response.data.errors);
-    }
+    createUser(userData)
+      .then(res => {
+        setUser(res.User)
+        setRegistered(true);
+        // console.log('userform``````` Res:', res, "Is user registered?", registered, "User ID:", res.userID, 'Data:', res.User)
+        storeIdInLocalStorage(res.userID)
+      })
+      .catch(error => {
+        setErrors(error.response?.data.errors)
+      })
   };
 
   if (registered) {
@@ -87,27 +84,27 @@ function RegisterPage() {
       <h1>Register</h1>
       <form onSubmit={handleSubmit}>
         <label>Username:</label>
-        <input type="text" name="username" value={form.username} onChange={handleFormChange} />
+        <input type="text" name="username" value={userData.username} onChange={handleFormChange} />
         {errors.username && <span style={{ color: 'red' }}>{errors.username}</span>}
         <br />
         <label>First Name:</label>
-        <input type="text" name="fName" value={form.fName} onChange={handleFormChange} />
+        <input type="text" name="fName" value={userData.fName} onChange={handleFormChange} />
         {errors.fname && <span style={{ color: 'red' }}>{errors.fname}</span>}
         <br />
         <label>Last Name:</label>
-        <input type="text" name="lName" value={form.lName} onChange={handleFormChange} />
+        <input type="text" name="lName" value={userData.lName} onChange={handleFormChange} />
         {errors.lname && <span style={{ color: 'red' }}>{errors.lname}</span>}
         <br />
         <label>Email:</label>
-        <input type="email" name="email" value={form.email} onChange={handleFormChange} />
+        <input type="email" name="email" value={userData.email} onChange={handleFormChange} />
         {errors.email && <span style={{ color: 'red' }}>{errors.email}</span>}
         <br />
         <label>Password:</label>
-        <input type="password" name="password" value={form.password} onChange={handleFormChange} />
+        <input type="password" name="password" value={userData.password} onChange={handleFormChange} />
         {errors.password && <span style={{ color: 'red' }}>{errors.password}</span>}
         <br />
         <label>Confirm Password:</label>
-        <input type="password" name="confirmPassword" value={form.confirmPassword} onChange={handleFormChange} />
+        <input type="password" name="confirmPassword" value={userData.confirmPassword} onChange={handleFormChange} />
         {errors.confirmPassword && <span style={{ color: 'red' }}>{errors.confirmPassword}</span>}
         <br />
         <button type="submit">Register</button>

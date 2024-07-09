@@ -11,7 +11,7 @@ def createUser():
   data = request.get_json()
   if User.validateNewUser(data):
     userID = User.createUser(data)
-    return jsonify({'message': 'User created', 'userID': userID}), 200
+    return jsonify({'message': 'User created', 'User': data , 'userID': userID}), 200
   else:
     return jsonify({'errorMsg': 'Validation failed'}), 400
 
