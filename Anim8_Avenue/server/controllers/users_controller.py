@@ -3,7 +3,7 @@ from flask_cors import CORS # type: ignore
 from models.user import User
 from config import app
 
-CORS(app)
+CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
 
 # C
 @app.route('/api/users', methods=['POST'])
@@ -11,7 +11,7 @@ def createUser():
   data = request.get_json()
   if User.validateNewUser(data):
     userID = User.createUser(data)
-    return jsonify({'message': 'User created', 'userID': userID}), 200
+    return jsonify({'message': 'User created', 'User': data , 'userID': userID}), 200
   else:
     return jsonify({'errorMsg': 'Validation failed'}), 400
 

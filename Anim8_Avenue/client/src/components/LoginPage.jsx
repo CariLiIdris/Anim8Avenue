@@ -1,9 +1,15 @@
+/* eslint-disable no-unused-vars */
 // LoginForm.js
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import { login } from '../services/userService';
+import { userContext } from '../context/userContext';
+import { useNavigate } from 'react-router-dom';
 
 function LoginForm() {
-  const [form, setForm] = useState({ email: '', password: '' });
-  const [errors, setErrors] = useState({ email: '', password: '' });
+  const [form, setForm] = useState({ username: '', password: '' });
+  const [errors, setErrors] = useState({ username: '', password: '' });
+  const { setUser, storeIdInLocalStorage } = useContext(userContext)
+  const navigate = useNavigate();
 
   const handleFormChange = (event) => {
     const { name, value } = event.target;
@@ -14,13 +20,11 @@ function LoginForm() {
 
   const validateField = (name, value) => {
     switch (name) {
-      case 'email':
+      case 'username':
         if (!value) {
-          setErrors((prevErrors) => ({ ...prevErrors, email: 'Email is required' }));
-        } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
-          setErrors((prevErrors) => ({ ...prevErrors, email: 'Invalid email address' }));
+          setErrors((prevErrors) => ({ ...prevErrors, username: 'Username is required' }));
         } else {
-          setErrors((prevErrors) => ({ ...prevErrors, email: '' }));
+          setErrors((prevErrors) => ({ ...prevErrors, username: '' }));
         }
         break;
       case 'password':
@@ -41,6 +45,13 @@ function LoginForm() {
     event.preventDefault();
     if (Object.keys(errors).every((key) => errors[key] === '')) {
       // Login logic here
+      login(form)
+        .then((res) => {
+          // console.log(res)
+          setUser(res.user)
+          storeIdInLocalStorage(res.user._id)
+          navigate('/')
+        })
       // You can call an API or perform any other login logic here
       console.log('Login successful!');
     }
@@ -48,9 +59,9 @@ function LoginForm() {
 
   return (
     <form onSubmit={handleFormSubmit}>
-      <label>Email:</label>
-      <input type="email" name="email" value={form.email} onChange={handleFormChange} />
-      {errors.email && <div style={{ color: 'red' }}>{errors.email}</div>}
+      <label>Username:</label>
+      <input type='text' name="username" value={form.username} onChange={handleFormChange} />
+      {errors.username && <div style={{ color: 'red' }}>{errors.username}</div>}
       <br />
       <label>Password:</label>
       <input type="password" name="password" value={form.password} onChange={handleFormChange} />

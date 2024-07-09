@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-catch */
 import axios from 'axios';
 
 const USER_INSTANCE = axios.create({
@@ -53,3 +54,20 @@ export const deleteUserById = async (id) => {
     throw error;
   }
 };
+
+export const logout = async activeUserData => {
+  try {
+    const res = await USER_INSTANCE.post('/user/logout', activeUserData)
+    return res.data
+  }
+  catch (err) { throw err }
+}
+
+export const login = async activeUserData => {
+  try {
+    const res = await USER_INSTANCE.post('/user/login', activeUserData)
+    // console.log(res.data)
+    return res.data
+  }
+  catch (err) { throw err }
+}
