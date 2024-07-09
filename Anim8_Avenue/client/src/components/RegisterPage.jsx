@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createUser } from '../services/userService.jsx';
@@ -47,14 +48,14 @@ function RegisterPage() {
         error = 'Password must be at least 8 characters';
       }
     } else if (name === 'confirmPassword') {
-      if (value!== form.password) {
+      if (value !== form.password) {
         error = 'Passwords do not match';
       }
     }
 
-    setErrors((prevErrors) => ({...prevErrors, [name]: error }));
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
 
-    setForm((prevForm) => ({...prevForm, [name]: value }));
+    setForm((prevForm) => ({ ...prevForm, [name]: value }));
   };
 
   const handleSubmit = async (event) => {
