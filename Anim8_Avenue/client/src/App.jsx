@@ -12,12 +12,13 @@ import ShowList from './components/ShowList.jsx';
 import ShowDetails from './components/ShowDetails.jsx';
 import ShowForm from './components/ShowForm.jsx';
 import ProfilePage from './components/ProfilePage.jsx';
+import { logout } from './services/userService.jsx';
 
 function App() {
   return (
     <>
       <Header />
-      <Navigation />
+      <Navigation submitFunction={logout} />
       <Routes>
         <Route
           path="/"

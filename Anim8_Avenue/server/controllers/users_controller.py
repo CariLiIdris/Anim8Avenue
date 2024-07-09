@@ -3,7 +3,7 @@ from flask_cors import CORS # type: ignore
 from models.user import User
 from config import app
 
-CORS(app)
+CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
 
 # C
 @app.route('/api/users', methods=['POST'])

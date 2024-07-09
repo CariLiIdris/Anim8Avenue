@@ -17,6 +17,7 @@ export const UserProvider = ({ children }) => {
     if (id) {
       getUserById(id)
         .then((res) => {
+          console.log(res)
           setUser(res)
         })
         .catch((err) => {
