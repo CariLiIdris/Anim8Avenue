@@ -17,8 +17,9 @@ export const UserProvider = ({ children }) => {
     if (id) {
       getUserById(id)
         .then((res) => {
-          console.log(res)
+          // console.log(res)
           setUser(res)
+          document.cookie = `userToken=${id}; path=/;`
         })
         .catch((err) => {
           console.log(err)

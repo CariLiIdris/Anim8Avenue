@@ -58,14 +58,15 @@ function LoginForm() {
   };
 
   return (
-    <form onSubmit={handleFormSubmit}>
+    <form className="login-form" onSubmit={handleFormSubmit}>
+      <h1>Login</h1>
       <label>Username:</label>
       <input type='text' name="username" value={form.username} onChange={handleFormChange} />
-      {errors.username && <div style={{ color: 'red' }}>{errors.username}</div>}
+      {errors.username && <div className="error">{errors.username}</div>}
       <br />
       <label>Password:</label>
       <input type="password" name="password" value={form.password} onChange={handleFormChange} />
-      {errors.password && <div style={{ color: 'red' }}>{errors.password}</div>}
+      {errors.password && <div className="error">{errors.password}</div>}
       <br />
       <button type="submit">Login</button>
     </form>

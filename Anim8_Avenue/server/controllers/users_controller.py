@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request, session, redirect, url_for # type: ig
 from flask_cors import CORS # type: ignore
 from models.user import User
 from config import app
+import logging
 
 CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
 
@@ -39,12 +40,17 @@ def getUserByUsername(username):
     return jsonify({'errorMsg': 'User not found'}), 404
 
 # U
-@app.route('/api/user/<int:userID>', methods=['PUT'])
-def updateUserByID(userID):
+@app.route('/api/user/<int:_id>', methods=['PUT'])
+def updateUserByID(_id):
     data = request.get_json()
+    logging.debug(f"Received data for update: {data}")
     if User.validateUserData(data):
-        User.updateUserByID(userID, data)
-        return jsonify({'message': 'User updated'}), 200
+        try:
+            User.updateUserByID(_id, data)
+            return jsonify({'message': 'User updated', 'Data': data}), 200
+        except Exception as e:
+            logging.error(f"Error updating user: {e}")
+            return jsonify({'errorMsg': 'Update failed', 'error': str(e)}), 500
     else:
         return jsonify({'errorMsg': 'Validation failed'}), 400
 
@@ -52,6 +58,7 @@ def updateUserByID(userID):
 @app.route('/api/user/<int:userID>', methods=['DELETE'])
 def deleteUserByID(userID):
     User.deleteUserByID(userID)
+    session.clear()
     return jsonify({'message': 'User deleted'}), 200
 
 # Login and logout
