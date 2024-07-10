@@ -1,4 +1,3 @@
-// ProfilePage.js
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
@@ -45,7 +44,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <div>
+    <div className="profile-page">
       <h1>Profile Page</h1>
       <p>Welcome, {user.username}!</p>
       <p>Email: {user.email}</p>
