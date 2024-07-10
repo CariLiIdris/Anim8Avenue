@@ -1,12 +1,11 @@
-/* Existing styles in index.css */
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
+  color-scheme: inherit;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #1c1c1c;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -29,6 +28,7 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  /* background: #1c1c1c url('path/to/your/anime/background.jpg') no-repeat center center/cover; */
 }
 
 h1 {
@@ -43,9 +43,8 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: rgba(26, 26, 26, 0.8);
   cursor: pointer;
-  transition: border-color 0.25s;
 }
 button:hover {
   border-color: #646cff;
@@ -68,11 +67,12 @@ button:focus-visible {
   }
 }
 
-/* Anime Styled CSS for RegisterPage */
+/* Glass-style Anime-themed CSS for RegisterPage */
 form {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.2);
   padding: 20px;
   border-radius: 10px;
+  backdrop-filter: blur(10px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -116,11 +116,12 @@ span, div {
   margin-bottom: 10px;
 }
 
-/* Anime Styled CSS for TrendingPage */
+/* Glass-style Anime-themed CSS for TrendingPage */
 .trending-page {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.2);
   padding: 20px;
   border-radius: 10px;
+  backdrop-filter: blur(10px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   color: #ffcc00;
 }
@@ -133,11 +134,12 @@ span, div {
   margin-bottom: 20px;
 }
 
-/* Anime Styled CSS for ProfilePage */
+/* Glass-style Anime-themed CSS for ProfilePage */
 .profile-page {
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.6);
   padding: 30px;
   border-radius: 15px;
+  backdrop-filter: blur(15px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
   color: #fff;
   max-width: 800px;
@@ -199,11 +201,12 @@ span, div {
   background: linear-gradient(45deg, #ffcc00, #ff6600);
 }
 
-/* Anime Styled CSS for LoginForm */
+/* Glass-style Anime-themed CSS for LoginForm */
 .login-form {
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.6);
   padding: 30px;
   border-radius: 15px;
+  backdrop-filter: blur(15px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
   color: #fff;
   max-width: 500px;

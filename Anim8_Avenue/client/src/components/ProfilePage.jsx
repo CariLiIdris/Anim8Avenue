@@ -1,60 +1,135 @@
-import React from 'react';
+/* eslint-disable no-unused-vars */
+import React, { useContext, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { userContext } from '../context/userContext';
+import { deleteUserById, logout, updateUserById } from '../services/userService';
+import { useCookies } from 'react-cookie'
 
 const ProfilePage = () => {
-  const [user, setUser] = useState({});
-  const [shows, setShows] = useState([]);
+  const { user } = useContext(userContext);
   const navigate = useNavigate();
+  const [isEditing, setIsEditing] = useState(false);
+  const [cookie, setCookie, removeCookie] = useCookies()
+  const [formData, setFormData] = useState({
+    username: '',
+    fName: '',
+    lName: '',
+    email: ''
+  });
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('Logged in user id');
     if (!token) {
       navigate('/login');
-    } else {
-      axios.get('/api/user', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-     .then(response => {
-        setUser(response.data);
-        axios.get('/api/shows', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-       .then(response => {
-          setShows(response.data);
-        })
-       .catch(error => {
-          console.error(error);
-        });
-      })
-     .catch(error => {
-        console.error(error);
+    } else if (user) {
+      setFormData({
+        username: user.username,
+        fName: user.fName,
+        lName: user.lName,
+        email: user.email
       });
     }
-  }, []);
+  }, [user, navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/login');
+    logout()
+      .then(() => {
+        navigate('/login');
+      })
+      .catch(error => { console.log(error) })
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const updatedUser = await updateUserById(user._id, formData);
+      setIsEditing(false);
+      window.location.reload();
+    } catch (error) {
+      console.error('Failed to update user', error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deleteUserById(user._id);
+      localStorage.removeItem('Logged in user id');
+      removeCookie('userToken', { path: '/', domain: 'localhost' });
+      navigate('/');
+    } catch (error) {
+      console.error('Failed to delete user', error);
+    }
   };
 
   return (
     <div className="profile-page">
       <h1>Profile Page</h1>
-      <p>Welcome, {user.username}!</p>
-      <p>Email: {user.email}</p>
-      <h2>Personalized Shows:</h2>
-      <ul>
-        {shows.map(show => (
-          <li key={show.id}>{show.name}</li>
-        ))}
-      </ul>
-      <button onClick={handleLogout}>Log Out</button>
+      {isEditing ? (
+        <form onSubmit={handleFormSubmit}>
+          <label>
+            Username:
+            <input
+              type="text"
+              name="username"
+              value={formData.username}
+              onChange={handleInputChange}
+            />
+          </label>
+          <label>
+            First Name:
+            <input
+              type="text"
+              name="fName"
+              value={formData.fName}
+              onChange={handleInputChange}
+            />
+          </label>
+          <label>
+            Last Name:
+            <input
+              type="text"
+              name="lName"
+              value={formData.lName}
+              onChange={handleInputChange}
+            />
+          </label>
+          <label>
+            Email:
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+            />
+          </label>
+          <button type="submit">Save Changes</button>
+          <button type="button" onClick={() => setIsEditing(false)}>Cancel</button>
+        </form>
+      ) : (
+        <>
+          <p>Welcome 👋, {user.username}!</p>
+          <p>First Name: {user.fName}</p>
+          <p>Last Name: {user.lName}</p>
+          <p>Email: {user.email}</p>
+          <h2>Personalized Shows:</h2>
+          <ul>
+            {user.shows ? user.shows.map(show => (
+              <li key={show._id}>{show.name}</li>
+            )) : <p>No shows available</p>}
+          </ul>
+          <button onClick={() => setIsEditing(true)}>Edit Profile</button>
+          <button onClick={handleDelete}>Delete Account</button>
+        </>
+      )}
     </div>
   );
 };
