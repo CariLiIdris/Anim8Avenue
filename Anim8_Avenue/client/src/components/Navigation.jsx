@@ -32,8 +32,6 @@ function Navigation({ submitFunction }) {
         <li><Link to="/">Trending</Link></li>
         <li><Link to="/news">News</Link></li>
         <li><Link to="/categories">Categories</Link></li>
-        <li><Link to="/login">Login</Link></li>
-        <li><Link to="/register">Register</Link></li>
       </ul>
       <div className="dropdown">
         {isLoggedIn ? (

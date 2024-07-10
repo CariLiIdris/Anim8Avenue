@@ -35,10 +35,11 @@ export const getUserById = async (id) => {
   }
 };
 
-export const updateUserById = async (id, userData) => {
+export const updateUserById = async (_id, userData) => {
   try {
-    const res = await USER_INSTANCE.put(`/user/${id}`, userData);
-    return res.data;
+    const res = await USER_INSTANCE.put(`/user/${_id}`, userData);
+    console.log('```userServices```Res: ', res)
+    return res.data
   } catch (error) {
     console.log(error);
     throw error;
@@ -55,9 +56,9 @@ export const deleteUserById = async (id) => {
   }
 };
 
-export const logout = async activeUserData => {
+export const logout = async () => {
   try {
-    const res = await USER_INSTANCE.post('/user/logout', activeUserData)
+    const res = await USER_INSTANCE.post('/user/logout', {}, { withCredentials: true })
     return res.data
   }
   catch (err) { throw err }
@@ -65,8 +66,8 @@ export const logout = async activeUserData => {
 
 export const login = async activeUserData => {
   try {
-    const res = await USER_INSTANCE.post('/user/login', activeUserData)
-    // console.log(res.data)
+    const res = await USER_INSTANCE.post('/user/login', activeUserData, { withCredentials: true })
+    console.log(res.data)
     return res.data
   }
   catch (err) { throw err }
