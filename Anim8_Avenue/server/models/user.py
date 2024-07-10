@@ -157,6 +157,7 @@ class User:
               WHERE _id = %(_id)s;
             '''
     data['_id'] = userID
+    # print("```User.py```",'Data:', data)
     return connectToMySQL(cls.DB).query_db(query, data)
   
   # D
@@ -261,14 +262,6 @@ class User:
   @staticmethod
   def validateUserData(userData):
     isValid = True
-
-    if User.getUserByUsername(userData['username']):
-        flash('Username already taken', 'register')
-        isValid = False
-
-    if User.getUserByEmail(userData['email']):
-        flash('Email already registered', 'register')
-        isValid = False
 
     if len(userData['username']) < 2:
       flash('Username must be greater than 2 characters', 'register')
