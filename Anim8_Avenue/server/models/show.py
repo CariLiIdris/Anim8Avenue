@@ -1,5 +1,5 @@
 from config.mysqlconnection import connectToMySQL
-from flask import flash
+from flask import flash # type: ignore
 
 class Show:
     from config import DB
