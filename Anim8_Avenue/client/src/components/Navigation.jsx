@@ -36,14 +36,14 @@ function Navigation({ submitFunction }) {
       <div className="dropdown">
         {isLoggedIn ? (
           <>
-            <li><Link to="/profile">Account</Link></li>
+            <Link to="/profile">Account</Link>
             <button className='navLink logoutBttn' onClick={handleLogout}>
               Logout
             </button>
           </>
         ) : (
           <>
-            <li><Link to="/login">Login</Link></li>
+            <Link to="/login">Login</Link>
             <Link to="/register">Register</Link>
           </>
         )}
