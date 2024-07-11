@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import ita from '../assets/images/Itadori.png'
+import Wei from '../assets/images/Weiss.png'
 
 function TrendingPage() {
   const [trendingShows, setTrendingShows] = useState([]);
@@ -19,26 +21,32 @@ function TrendingPage() {
 
   return (
     <div className="trending-page">
-      <h1>Trending Shows</h1>
-      <div className="button-container">
-        <Link to="/shows">
-          <button className="nav-button">View All Shows</button>
-        </Link>
-        <Link to="/shows/create">
-          <button className="nav-button">Add New Show</button>
-        </Link>
+      <div className="trendingImgGroup">
+        <img src={ita} className='leftImg' alt="Itadori Icon" />
+        <div className="trendGroup">
+          <h1 className='root'>Trending Shows</h1>
+          <div className="button-container">
+            <Link to="/shows">
+              <button className="nav-button">View All Shows</button>
+            </Link>
+            <Link to="/shows/create">
+              <button className="nav-button">Add New Show</button>
+            </Link>
+          </div>
+          <ul className="show-list">
+            {trendingShows.map(show => (
+              <li key={show._id} className="show-item">
+                <h2>{show.name}</h2>
+                <p>{show.description}</p>
+                {show.image_url && (
+                  <img src={`http://localhost:8000/${show.image_url}`} alt={show.name} className="show-image" />
+                )}
+              </li>
+            ))}
+          </ul>
+        </div >
+        <img src={Wei} className='rightImg' alt="Weiss" />
       </div>
-      <ul className="show-list">
-        {trendingShows.map(show => (
-          <li key={show._id} className="show-item">
-            <h2>{show.name}</h2>
-            <p>{show.description}</p>
-            {show.image_url && (
-              <img src={`http://localhost:8000/${show.image_url}`} alt={show.name} className="show-image" />
-            )}
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }

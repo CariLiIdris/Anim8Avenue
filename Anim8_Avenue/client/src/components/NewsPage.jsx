@@ -20,7 +20,7 @@ function NewsPage() {
 
   return (
     <div className="news-page-container">
-      <h1>Anime News</h1>
+      <h1 className='root'>Anime News</h1>
       <div className="news-list">
         {news.map(item => (
           <div key={item.mal_id} className="news-item">

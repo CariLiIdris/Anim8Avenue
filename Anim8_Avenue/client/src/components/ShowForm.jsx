@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { createShow } from '../services/showService';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const categories = [
   "Slice of life",
@@ -90,6 +91,8 @@ function ShowForm() {
   return (
     <div className="show-form-container">
       <h1>Create Show</h1>
+      <button><Link to={"/profile"}>Profile</Link></button>
+      <button><Link to={"/shows"}>Shows</Link></button>
       <form onSubmit={handleSubmit}>
         <label>Name:</label>
         <input
