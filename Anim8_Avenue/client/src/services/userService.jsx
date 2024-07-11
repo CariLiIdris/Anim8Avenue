@@ -1,4 +1,5 @@
 /* eslint-disable no-useless-catch */
+// Nehimya
 import axios from 'axios';
 
 const USER_INSTANCE = axios.create({
@@ -35,6 +36,7 @@ export const getUserById = async (id) => {
   }
 };
 
+// Zacarias
 export const updateUserById = async (_id, userData) => {
   try {
     const res = await USER_INSTANCE.put(`/user/${_id}`, userData);
@@ -46,6 +48,7 @@ export const updateUserById = async (_id, userData) => {
   }
 };
 
+// Nehimya
 export const deleteUserById = async (id) => {
   try {
     const res = await USER_INSTANCE.delete(`/user/${id}`);
@@ -55,7 +58,7 @@ export const deleteUserById = async (id) => {
     throw error;
   }
 };
-
+// Zacarias
 export const logout = async () => {
   try {
     const res = await USER_INSTANCE.post('/user/logout', {}, { withCredentials: true })

@@ -8,6 +8,7 @@ function RegisterPage() {
   const navigate = useNavigate();
   const { setUser, storeIdInLocalStorage } = useContext(userContext);
 
+  // Both
   const [userData, setUserData] = useState({
     username: '',
     fName: '',
@@ -28,6 +29,7 @@ function RegisterPage() {
 
   const [registered, setRegistered] = useState(false);
 
+  // Nehimya
   const handleFormChange = e => {
     const { name, value } = e.target;
 
@@ -59,13 +61,16 @@ function RegisterPage() {
     setUserData((prevForm) => ({ ...prevForm, [name]: value }));
   };
 
+  // Zacarias
   const handleSubmit = async e => {
     e.preventDefault();
 
     createUser(userData)
       .then(res => {
         setUser(res.User);
+        // Nehimya
         setRegistered(true);
+        // Zacarias
         storeIdInLocalStorage(res.userID);
       })
       .catch(error => {

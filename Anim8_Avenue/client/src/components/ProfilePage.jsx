@@ -7,10 +7,12 @@ import { deleteUserById, logout, updateUserById } from '../services/userService'
 import { useCookies } from 'react-cookie'
 
 const ProfilePage = () => {
+  // Zacarias
   const { user } = useContext(userContext);
-  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [cookie, setCookie, removeCookie] = useCookies()
+  // Nehimya
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
     fName: '',
@@ -32,6 +34,7 @@ const ProfilePage = () => {
     }
   }, [user, navigate]);
 
+  // Zacarias
   const handleLogout = () => {
     logout()
       .then(() => {
@@ -40,6 +43,7 @@ const ProfilePage = () => {
       .catch(error => { console.log(error) })
   };
 
+  // Nehimya
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -59,6 +63,7 @@ const ProfilePage = () => {
     }
   };
 
+  // Zacarias
   const handleDelete = async () => {
     try {
       await deleteUserById(user._id);
