@@ -5,12 +5,16 @@ import axios from 'axios';
 import { userContext } from '../context/userContext';
 import { deleteUserById, logout, updateUserById } from '../services/userService';
 import { useCookies } from 'react-cookie'
+import Uchi from '../assets/images/uchiha.png'
+import Rim from '../assets/images/Rimuru.png'
 
 const ProfilePage = () => {
+  // Zacarias
   const { user } = useContext(userContext);
-  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [cookie, setCookie, removeCookie] = useCookies()
+  // Nehimya
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
     fName: '',
@@ -32,6 +36,7 @@ const ProfilePage = () => {
     }
   }, [user, navigate]);
 
+  // Zacarias
   const handleLogout = () => {
     logout()
       .then(() => {
@@ -40,6 +45,7 @@ const ProfilePage = () => {
       .catch(error => { console.log(error) })
   };
 
+  // Nehimya
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -59,6 +65,7 @@ const ProfilePage = () => {
     }
   };
 
+  // Zacarias
   const handleDelete = async () => {
     try {
       await deleteUserById(user._id);
@@ -72,64 +79,74 @@ const ProfilePage = () => {
 
   return (
     <div className="profile-page">
-      <h1>Profile Page</h1>
-      {isEditing ? (
-        <form onSubmit={handleFormSubmit}>
-          <label>
-            Username:
-            <input
-              type="text"
-              name="username"
-              value={formData.username}
-              onChange={handleInputChange}
-            />
-          </label>
-          <label>
-            First Name:
-            <input
-              type="text"
-              name="fName"
-              value={formData.fName}
-              onChange={handleInputChange}
-            />
-          </label>
-          <label>
-            Last Name:
-            <input
-              type="text"
-              name="lName"
-              value={formData.lName}
-              onChange={handleInputChange}
-            />
-          </label>
-          <label>
-            Email:
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-            />
-          </label>
-          <button type="submit">Save Changes</button>
-          <button type="button" onClick={() => setIsEditing(false)}>Cancel</button>
-        </form>
-      ) : (
-        <>
-          <p>Welcome 👋, {user.username}!</p>
-          <p>First Name: {user.fName}</p>
-          <p>Last Name: {user.lName}</p>
-          <p>Email: {user.email}</p>
-          <h2>Personalized Shows:</h2>
-          <ul>
-            {user.shows ? user.shows.map(show => (
-              <li key={show._id}>{show.name}</li>
-            )) : <p>No shows available</p>}
-          </ul>
-          <button onClick={() => setIsEditing(true)}>Edit Profile</button>
-          <button onClick={handleDelete}>Delete Account</button>
-        </>
-      )}
+      <div className='AccountImgGroup'>
+        <img src={Rim} className='leftImg' alt="Rimuru" />
+        <div>
+          <h1>Profile Page</h1>
+          {isEditing ? (
+            <form onSubmit={handleFormSubmit}>
+              <label>
+                Username:
+                <input
+                  type="text"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleInputChange}
+                />
+              </label>
+              <label>
+                First Name:
+                <input
+                  type="text"
+                  name="fName"
+                  value={formData.fName}
+                  onChange={handleInputChange}
+                />
+              </label>
+              <label>
+                Last Name:
+                <input
+                  type="text"
+                  name="lName"
+                  value={formData.lName}
+                  onChange={handleInputChange}
+                />
+              </label>
+              <label>
+                Email:
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                />
+              </label>
+              <button type="submit">Save Changes</button>
+              <button type="button" onClick={() => setIsEditing(false)}>Cancel</button>
+            </form>
+          ) : (
+            <>
+              <button><Link to={"/shows/create"}>Create Show</Link></button>
+              <button><Link to={"/shows/:id"}>Update My Shows</Link></button>
+              <button><Link to={"/shows"}>Shows catalog</Link></button>
+              <p>Welcome 👋, {user.username}!</p>
+              <p>First Name: {user.fName}</p>
+              <p>Last Name: {user.lName}</p>
+              <p>Email: {user.email}</p>
+              <h2>Personalized Shows:</h2>
+              <ul>
+                {user.shows ? user.shows.map(show => (
+                  <li key={show._id}>{show.name}</li>
+                )) : <p>No shows available</p>}
+              </ul>
+              <button onClick={() => setIsEditing(true)}>Edit Profile</button>
+              <button onClick={handleDelete}>Delete Account</button>
+            </>
+          )}
+        </div>
+        <img src={Uchi} className='rightImg' alt="Madara" />
+      </div>
+
     </div>
   );
 };

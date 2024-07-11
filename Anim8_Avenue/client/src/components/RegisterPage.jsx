@@ -6,8 +6,9 @@ import { userContext } from '../context/userContext.jsx';
 
 function RegisterPage() {
   const navigate = useNavigate();
-  const { setUser, storeIdInLocalStorage } = useContext(userContext)
+  const { setUser, storeIdInLocalStorage } = useContext(userContext);
 
+  // Both
   const [userData, setUserData] = useState({
     username: '',
     fName: '',
@@ -28,6 +29,7 @@ function RegisterPage() {
 
   const [registered, setRegistered] = useState(false);
 
+  // Nehimya
   const handleFormChange = e => {
     const { name, value } = e.target;
 
@@ -56,23 +58,24 @@ function RegisterPage() {
     }
 
     setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
-
     setUserData((prevForm) => ({ ...prevForm, [name]: value }));
   };
 
+  // Zacarias
   const handleSubmit = async e => {
     e.preventDefault();
 
     createUser(userData)
       .then(res => {
-        setUser(res.User)
+        setUser(res.User);
+        // Nehimya
         setRegistered(true);
-        // console.log('userform``````` Res:', res, "Is user registered?", registered, "User ID:", res.userID, 'Data:', res.User)
-        storeIdInLocalStorage(res.userID)
+        // Zacarias
+        storeIdInLocalStorage(res.userID);
       })
       .catch(error => {
-        setErrors(error.response?.data.errors)
-      })
+        setErrors(error.response?.data.errors);
+      });
   };
 
   if (registered) {
@@ -80,32 +83,32 @@ function RegisterPage() {
   }
 
   return (
-    <div>
+    <div className="register-container">
       <h1>Register</h1>
       <form onSubmit={handleSubmit}>
         <label>Username:</label>
         <input type="text" name="username" value={userData.username} onChange={handleFormChange} />
-        {errors?.username && <span style={{ color: 'red' }}>{errors.username}</span>}
+        {errors?.username && <span className="error">{errors.username}</span>}
         <br />
         <label>First Name:</label>
         <input type="text" name="fName" value={userData.fName} onChange={handleFormChange} />
-        {errors?.fname && <span style={{ color: 'red' }}>{errors?.fname}</span>}
+        {errors?.fname && <span className="error">{errors?.fname}</span>}
         <br />
         <label>Last Name:</label>
         <input type="text" name="lName" value={userData.lName} onChange={handleFormChange} />
-        {errors?.lname && <span style={{ color: 'red' }}>{errors?.lname}</span>}
+        {errors?.lname && <span className="error">{errors?.lname}</span>}
         <br />
         <label>Email:</label>
         <input type="email" name="email" value={userData.email} onChange={handleFormChange} />
-        {errors?.email && <span style={{ color: 'red' }}>{errors?.email}</span>}
+        {errors?.email && <span className="error">{errors?.email}</span>}
         <br />
         <label>Password:</label>
         <input type="password" name="password" value={userData.password} onChange={handleFormChange} />
-        {errors?.password && <span style={{ color: 'red' }}>{errors?.password}</span>}
+        {errors?.password && <span className="error">{errors?.password}</span>}
         <br />
         <label>Confirm Password:</label>
         <input type="password" name="confirmPassword" value={userData.confirmPassword} onChange={handleFormChange} />
-        {errors?.confirmPassword && <span style={{ color: 'red' }}>{errors?.confirmPassword}</span>}
+        {errors?.confirmPassword && <span className="error">{errors?.confirmPassword}</span>}
         <br />
         <button type="submit">Register</button>
       </form>
