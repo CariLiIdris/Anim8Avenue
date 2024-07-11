@@ -1,12 +1,24 @@
 :root {
+  --primary-color: #ffcc00;
+  --secondary-color: #ff6600;
+  --text-color: rgba(255, 255, 255, 0.87);
+  --background-color: #1c1c1c;
+  --link-color: #646cff;
+  --link-hover-color: #535bf2;
+  --form-background: rgba(255, 255, 255, 0.2);
+  --form-border: #ffcc00;
+  --form-focus-border: #ff6600;
+  --button-background: rgba(26, 26, 26, 0.8);
+  --button-hover-border: #646cff;
+  --glass-background: rgba(0, 0, 0, 0.6);
+  --glass-blur: blur(15px);
+
   font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
   color-scheme: inherit;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #1c1c1c;
-
+  color: var(--text-color);
+  background-color: var(--background-color);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -18,14 +30,22 @@
   to { opacity: 1; }
 }
 
+@keyframes flashyText {
+  0% { color: var(--primary-color); }
+  25% { color: var(--secondary-color); }
+  50% { color: var(--link-color); }
+  75% { color: var(--link-hover-color); }
+  100% { color: var(--primary-color); }
+}
+
 a {
   font-weight: 500;
-  color: #646cff;
+  color: var(--link-color);
   text-decoration: inherit;
   transition: color 0.3s ease;
 }
 a:hover {
-  color: #535bf2;
+  color: var(--link-hover-color);
 }
 
 body {
@@ -34,7 +54,7 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  background: #1c1c1c url('path/to/your/anime/background.jpg') no-repeat center center/cover;
+  background: var(--background-color) url('path/to/your/anime/background.jpg') no-repeat center center/cover;
   animation: fadeIn 1s ease-in;
 }
 
@@ -42,6 +62,7 @@ h1 {
   font-size: 3.2em;
   line-height: 1.1;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  animation: flashyText 3s infinite;
 }
 
 button {
@@ -51,12 +72,12 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: rgba(26, 26, 26, 0.8);
+  background-color: var(--button-background);
   cursor: pointer;
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: var(--button-hover-border);
 }
 button:focus,
 button:focus-visible {
@@ -65,20 +86,15 @@ button:focus-visible {
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
+    --text-color: #213547;
+    --background-color: #ffffff;
+    --link-hover-color: #747bff;
+    --button-background: #f9f9f9;
   }
 }
 
-/* Glass-style Anime-themed CSS for RegisterPage */
 form {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--form-background);
   padding: 20px;
   border-radius: 10px;
   backdrop-filter: blur(10px);
@@ -88,12 +104,12 @@ form {
 
 label {
   font-size: 1.2em;
-  color: #ffcc00;
+  color: var(--primary-color);
   text-shadow: 2px 2px 0 #333;
 }
 
 input[type="text"], input[type="email"], input[type="password"] {
-  border: 2px solid #ffcc00;
+  border: 2px solid var(--form-border);
   border-radius: 5px;
   padding: 10px;
   margin-bottom: 10px;
@@ -104,19 +120,19 @@ input[type="text"], input[type="email"], input[type="password"] {
 }
 
 input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
-  border-color: #ff6600;
+  border-color: var(--form-focus-border);
   box-shadow: 0 0 10px rgba(255, 102, 0, 0.5);
 }
 
 button[type="submit"] {
-  background: linear-gradient(45deg, #ffcc00, #ff6600);
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
   color: #fff;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
   transition: background 0.3s ease;
 }
 
 button[type="submit"]:hover {
-  background: linear-gradient(45deg, #ff6600, #ffcc00);
+  background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
 }
 
 span, div {
@@ -127,31 +143,29 @@ span, div {
   margin-bottom: 10px;
 }
 
-/* Glass-style Anime-themed CSS for TrendingPage */
 .trending-page {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--form-background);
   padding: 20px;
   border-radius: 10px;
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  color: #ffcc00;
+  color: var(--primary-color);
   animation: fadeIn 1s ease-in;
 }
 
 .trending-page h1 {
   font-size: 3em;
   text-shadow: 2px 2px 0 #333;
-  color: #ff6600;
+  color: var(--secondary-color);
   text-align: center;
   margin-bottom: 20px;
 }
 
-/* Glass-style Anime-themed CSS for ProfilePage */
 .profile-page {
-  background: rgba(0, 0, 0, 0.6);
+  background: var(--glass-background);
   padding: 30px;
   border-radius: 15px;
-  backdrop-filter: blur(15px);
+  backdrop-filter: var(--glass-blur);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
   color: #fff;
   max-width: 800px;
@@ -162,7 +176,7 @@ span, div {
 
 .profile-page h1 {
   font-size: 3em;
-  color: #ffcc00;
+  color: var(--primary-color);
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
@@ -174,7 +188,7 @@ span, div {
 
 .profile-page h2 {
   font-size: 2.5em;
-  color: #ff6600;
+  color: var(--secondary-color);
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
@@ -191,7 +205,7 @@ span, div {
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   font-size: 1.2em;
-  color: #ffcc00;
+  color: var(--primary-color);
   transition: background 0.3s ease;
 }
 
@@ -200,7 +214,7 @@ span, div {
 }
 
 .profile-page button {
-  background: linear-gradient(45deg, #ff6600, #ffcc00);
+  background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
   color: #fff;
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
   padding: 10px 20px;
@@ -211,15 +225,14 @@ span, div {
 }
 
 .profile-page button:hover {
-  background: linear-gradient(45deg, #ffcc00, #ff6600);
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
 }
 
-/* Glass-style Anime-themed CSS for LoginForm */
 .login-form {
-  background: rgba(0, 0, 0, 0.6);
+  background: var(--glass-background);
   padding: 30px;
   border-radius: 15px;
-  backdrop-filter: blur(15px);
+  backdrop-filter: var(--glass-blur);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
   color: #fff;
   max-width: 500px;
@@ -230,18 +243,18 @@ span, div {
 
 .login-form h1 {
   font-size: 3em;
-  color: #ffcc00;
+  color: var(--primary-color);
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
 .login-form label {
   font-size: 1.2em;
-  color: #ffcc00;
+  color: var(--primary-color);
   text-shadow: 2px 2px 0 #333;
 }
 
 .login-form input[type="text"], .login-form input[type="password"] {
-  border: 2px solid #ffcc00;
+  border: 2px solid var(--form-border);
   border-radius: 5px;
   padding: 10px;
   margin-bottom: 10px;
@@ -252,12 +265,12 @@ span, div {
 }
 
 .login-form input[type="text"]:focus, .login-form input[type="password"]:focus {
-  border-color: #ff6600;
+  border-color: var(--form-focus-border);
   box-shadow: 0 0 10px rgba(255, 102, 0, 0.5);
 }
 
 .login-form button[type="submit"] {
-  background: linear-gradient(45deg, #ff6600, #ffcc00);
+  background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
   color: #fff;
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
   padding: 10px 20px;
@@ -268,7 +281,7 @@ span, div {
 }
 
 .login-form button[type="submit"]:hover {
-  background: linear-gradient(45deg, #ffcc00, #ff6600);
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
 }
 
 .login-form .error {
@@ -277,3 +290,4 @@ span, div {
   margin-top: -8px;
   margin-bottom: 10px;
 }
+
